@@ -17,6 +17,23 @@ def dijkstras_shortest_path(initial_position, destination, graph, adj):
         Otherwise, return None.
 
     """
+    queue = [(0,initial_position)]
+    start_node = queue[0]
+    while queue:
+        lowest_cost = start_node[0] # set to first element
+        index = 0 # node index to be returned
+        for i in queue:
+            cost = i[0]
+            if (lowest_cost > cost):
+                lowest_cost = cost # update cost value
+            ++index
+        current = queue.pop[index]
+        if current[1] == destination:
+            return #PATH TO GOAL/GRAPH WTF???
+        
+        
+    
+
     pass
 
 
