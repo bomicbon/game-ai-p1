@@ -39,7 +39,6 @@ def dijkstras_shortest_path(initial_position, destination, graph, adj):
 
 def dijkstras_shortest_path_to_all(initial_position, graph, adj):
     """ Calculates the minimum cost to every reachable cell in a graph from the initial_position.
-
     Args:
         initial_position: The initial cell from which the path extends.
         graph: A loaded level, containing walls, spaces, and waypoints.
@@ -68,6 +67,18 @@ def navigation_edges(level, cell):
              ((1,1), 1.4142135623730951),
              ... ]
     """
+    adjacencies = []
+    x, y = cell
+    for dx in [-1, 0, 1]:
+        for dy in [-1,0,1]:
+            if dx!=0 or dy!=0 and (x+dx, y+dy) in level['spaces'] : # Makes sure to check if the adjacent squres
+                if dx==0 or dy==0:
+                    new_dist=(0.5*level['spaces'][x][y] + 0.5*level['spaces'][x+dx][y+dy])
+                else:
+                    new_dist = (sqrt(2)*(level['spaces'][x][y] + level['spaces'][x + dx][y + dy]))
+                adjacencies.append(((x+dx, y+dy),new_dist))
+
+    return adjacencies
     pass
 
 
