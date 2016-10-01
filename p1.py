@@ -4,6 +4,8 @@ from heapq import heappop, heappush
 
 
 def dijkstras_shortest_path(initial_position, destination, graph, adj):
+    # Returns a list containing all cells from initial_position
+    # to destination.
     """ Searches for a minimal cost path through a graph using Dijkstra's algorithm.
 
     Args:
@@ -23,9 +25,25 @@ def dijkstras_shortest_path(initial_position, destination, graph, adj):
     dist[state] = better_distance
     prev[state2] = state1
     """
+    Q = []  # Create a vertex set Q, (list)
     dist = {}  # Distance
-    prev = {}  # Previous State
-
+    dist['source'] = 0  # Distance from source to source
+    prev = {}  # "Back Pointer"
+    for v in graph:
+        if v is not 'source':  # Literally the key/string, 'source'
+            dist[v] = math.inf  # Unknown distance from source to v
+            prev[v] = None  # Set to Undefined
+        Q[v] = dist[v]  # Pseudo says to Q.add_with_priority(v, dist[v])
+        # This may or may not satisfy that
+    while Q:
+        u = min(Q, key=Q.get)  # Remove & return best vertex
+        for v in Q:  # Everything else besides best vertex
+            if not best_vertex:
+                alt = dist[u]  # + dist(u, v)
+            if alt < dist[v]:
+                dist[v] = alt
+                prev[v] = u
+                Q.decrease_priority(v, alt)
     """ 
     Because dist will not be defined for unvisited states,
     the expression "alt < dist[v]" must be implemented as
@@ -44,6 +62,7 @@ def dijkstras_shortest_path(initial_position, destination, graph, adj):
     Represent it as a list of states that starts with their
     source state and ends with the destination state.
     """
+    """
     queue = [(0, initial_position)]
     start_node = queue[0]
     while queue:
@@ -57,16 +76,17 @@ def dijkstras_shortest_path(initial_position, destination, graph, adj):
         current = queue.pop[index]
         if current[1] == destination:
             return  # PATH TO GOAL/GRAPH WTF???
-
     if not path:
         return None
     else:
         return path
-
     pass
+    """
 
 
 def dijkstras_shortest_path_to_all(initial_position, graph, adj):
+    # Only returns costs
+    # Not returning a dictionary
     """ Calculates the minimum cost to every reachable cell in a graph from the initial_position.
     Args:
         initial_position: The initial cell from which the path extends.
