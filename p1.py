@@ -17,22 +17,51 @@ def dijkstras_shortest_path(initial_position, destination, graph, adj):
         Otherwise, return None.
 
     """
-    queue = [(0,initial_position)]
+    """
+    Skip the entire initialization loop, 
+    instead use dicts:
+    dist[state] = better_distance
+    prev[state2] = state1
+    """
+    dist = {}  # Distance
+    prev = {}  # Previous State
+
+    """ 
+    Because dist will not be defined for unvisited states,
+    the expression "alt < dist[v]" must be implemented as
+    "v not in dist or alt < dist[v]" or
+    "alt < dist.get(v, alt + 1)"
+    """
+    """
+    Use Python's heapq module to implement the priority queue.
+    The queue will simply be a Python list containing tuples
+    (distance-and-state pairs), but you'll use the heapq
+    library to add and remove elements from it
+    """
+    """
+    Instead of returning the "dist" and "prev" tables (dicts),
+    recover a specific shortest path and return it instead. 
+    Represent it as a list of states that starts with their
+    source state and ends with the destination state.
+    """
+    queue = [(0, initial_position)]
     start_node = queue[0]
     while queue:
-        lowest_cost = start_node[0] # set to first element
-        index = 0 # node index to be returned
+        lowest_cost = start_node[0]  # set to first element
+        index = 0  # node index to be returned
         for i in queue:
             cost = i[0]
             if (lowest_cost > cost):
-                lowest_cost = cost # update cost value
+                lowest_cost = cost  # update cost value
             ++index
         current = queue.pop[index]
         if current[1] == destination:
-            return #PATH TO GOAL/GRAPH WTF???
-        
-        
-    
+            return  # PATH TO GOAL/GRAPH WTF???
+
+    if not path:
+        return None
+    else:
+        return path
 
     pass
 
@@ -70,13 +99,16 @@ def navigation_edges(level, cell):
     adjacencies = []
     x, y = cell
     for dx in [-1, 0, 1]:
-        for dy in [-1,0,1]:
-            if dx!=0 or dy!=0 and (x+dx, y+dy) in level['spaces'] : # Makes sure to check if the adjacent squres
-                if dx==0 or dy==0:
-                    new_dist=(0.5*level['spaces'][x][y] + 0.5*level['spaces'][x+dx][y+dy])
+        for dy in [-1, 0, 1]:
+            # Makes sure to check if the adjacent squres
+            if dx != 0 or dy != 0 and (x + dx, y + dy) in level['spaces']:
+                if dx == 0 or dy == 0:
+                    new_dist = (
+                        0.5 * level['spaces'][x][y] + 0.5 * level['spaces'][x + dx][y + dy])
                 else:
-                    new_dist = (sqrt(2)*(level['spaces'][x][y] + level['spaces'][x + dx][y + dy]))
-                adjacencies.append(((x+dx, y+dy),new_dist))
+                    new_dist = (
+                        sqrt(2) * (level['spaces'][x][y] + level['spaces'][x + dx][y + dy]))
+                adjacencies.append(((x + dx, y + dy), new_dist))
 
     return adjacencies
     pass
@@ -118,24 +150,27 @@ def cost_to_all_cells(filename, src_waypoint, output_filename):
         output_filename: The filename for the output csv file.
 
     """
-    
+
     # Load and display the level.
     level = load_level(filename)
     show_level(level)
 
     # Retrieve the source coordinates from the level.
     src = level['waypoints'][src_waypoint]
-    
-    # Calculate the cost to all reachable cells from src and save to a csv file.
-    costs_to_all_cells = dijkstras_shortest_path_to_all(src, level, navigation_edges)
+
+    # Calculate the cost to all reachable cells from src and save to a csv
+    # file.
+    costs_to_all_cells = dijkstras_shortest_path_to_all(
+        src, level, navigation_edges)
     save_level_costs(level, costs_to_all_cells, output_filename)
 
 
 if __name__ == '__main__':
-    filename, src_waypoint, dst_waypoint = 'example.txt', 'a','e'
+    filename, src_waypoint, dst_waypoint = 'example.txt', 'a', 'e'
 
     # Use this function call to find the route between two waypoints.
     test_route(filename, src_waypoint, dst_waypoint)
 
-    # Use this function to calculate the cost to all reachable cells from an origin point.
+    # Use this function to calculate the cost to all reachable cells from an
+    # origin point.
     cost_to_all_cells(filename, src_waypoint, 'my_costs.csv')
