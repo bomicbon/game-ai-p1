@@ -20,6 +20,7 @@ def dijkstras_shortest_path(initial_position, destination, graph, adj):
     dist = {}
     prev = {}
     queue = []
+    print(initial_position)
     heappush(queue, (0,(graph['waypoints'][initial_position])))# distance
     dist[graph['waypoints'][initial_position]] = 0 # Initialize summed distance from source waypoint
     prev[graph['waypoints'][initial_position]] = None #Initializing Previous Node
@@ -38,9 +39,9 @@ def dijkstras_shortest_path(initial_position, destination, graph, adj):
     coordinate3=graph['waypoints'][destination]
     path_list = []
     while(prev[coordinate3]!=None):
-        path_list.append([coordinate3])
+        path_list.append(coordinate3)
         coordinate3=prev[coordinate3]
-    print(path_list)
+    path_list.append(graph['waypoints'][initial_position])
 
     return(path_list)
     pass
@@ -110,11 +111,12 @@ def test_route(filename, src_waypoint, dst_waypoint):
     show_level(level)
 
     # Retrieve the source and destination coordinates from the level.
-    src = level['waypoints'][src_waypoint]
-    dst = level['waypoints'][dst_waypoint]
+    #src = level['waypoints'][src_waypoint]
+    #dst = level['waypoints'][dst_waypoint]
 
     # Search for and display the path from src to dst.
-    path = dijkstras_shortest_path(src, dst, level, navigation_edges)
+    path = dijkstras_shortest_path(src_waypoint, dst_waypoint, level, navigation_edges)
+    print(path)
     if path:
         show_level(level, path)
     else:
