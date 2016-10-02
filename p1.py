@@ -36,14 +36,16 @@ def dijkstras_shortest_path(initial_position, destination, graph, adj):
                 # *** need to finish ***
                 if coordinate2 == graph['waypoints'][destination]:
                     print("found")
-    coordinate3=graph['waypoints'][destination]
-    path_list = []
-    while(prev[coordinate3]!=None):
-        path_list.append(coordinate3)
-        coordinate3=prev[coordinate3]
-    path_list.append(graph['waypoints'][initial_position])
+                    coordinate3 = graph['waypoints'][destination]
+                    path_list = []
+                    while (prev[coordinate3] != None):
+                        path_list.append(coordinate3)
+                        coordinate3 = prev[coordinate3]
+                    path_list.append(graph['waypoints'][initial_position])
 
-    return(path_list)
+                    return (path_list)
+
+    return(None)
     pass
 
 
@@ -57,6 +59,25 @@ def dijkstras_shortest_path_to_all(initial_position, graph, adj):
     Returns:
         A dictionary, mapping destination cells to the cost of a path from the initial_position.
     """
+    dist = {}
+    prev = {}
+    queue = []
+    print(initial_position)
+    heappush(queue, (0,(graph['waypoints'][initial_position])))# distance
+    dist[graph['waypoints'][initial_position]] = 0 # Initialize summed distance from source waypoint
+    prev[graph['waypoints'][initial_position]] = None #Initializing Previous Node
+    while queue:
+        distance, coordinate= heappop(queue) # Pops head of the heapq
+        adjacency = adj(graph, coordinate)
+        for (coordinate2,distance) in adjacency:
+            alt=dist[coordinate] + distance
+            if (coordinate2 not in dist) or (alt < dist[coordinate2]):#other stuff :
+                dist[coordinate2]=alt
+                prev[coordinate2]=coordinate
+                heappush(queue, (alt,(coordinate2)))
+                # *** need to finish ***
+
+    return(dist)
     pass
 
 
@@ -82,7 +103,7 @@ def navigation_edges(level, cell):
 
     for dx in [-1, 0, 1]:
         for dy in [-1,0,1]:
-            if (x+dx, y+dy) in level['spaces'] and (dx!=0 or dy!=0): # Makes sure to check if the adjacent squares
+            if ( (x+dx, y+dy) in level['spaces']) and (dx!=0 or dy!=0): # Makes sure to check if the adjacent squares
                 x2 = x + dx
                 y2 = y + dy
                 #print(x + dx, y + dy)
@@ -139,10 +160,10 @@ def cost_to_all_cells(filename, src_waypoint, output_filename):
     show_level(level)
 
     # Retrieve the source coordinates from the level.
-    src = level['waypoints'][src_waypoint]
+    #src = level['waypoints'][src_waypoint]
     
     # Calculate the cost to all reachable cells from src and save to a csv file.
-    costs_to_all_cells = dijkstras_shortest_path_to_all(src, level, navigation_edges)
+    costs_to_all_cells = dijkstras_shortest_path_to_all(src_waypoint, level, navigation_edges)
     save_level_costs(level, costs_to_all_cells, output_filename)
 
 
@@ -159,4 +180,4 @@ if __name__ == '__main__':
     test_route(filename, src_waypoint, dst_waypoint)
 
     # Use this function to calculate the cost to all reachable cells from an origin point.
-    #cost_to_all_cells(filename, src_waypoint, 'my_costs.csv')
+    cost_to_all_cells(filename, 'e', 'my_costs.csv')
