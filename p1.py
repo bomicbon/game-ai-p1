@@ -21,18 +21,21 @@ def dijkstras_shortest_path(initial_position, destination, graph, adj):
     prev = {}
     queue = []
     print(initial_position)
-    heappush(queue, (0,(graph['waypoints'][initial_position])))# distance
-    dist[graph['waypoints'][initial_position]] = 0 # Initialize summed distance from source waypoint
-    prev[graph['waypoints'][initial_position]] = None #Initializing Previous Node
+    heappush(queue, (0, (graph['waypoints'][initial_position])))  # distance
+    # Initialize summed distance from source waypoint
+    dist[graph['waypoints'][initial_position]] = 0
+    # Initializing Previous Node
+    prev[graph['waypoints'][initial_position]] = None
     while queue:
-        distance, coordinate= heappop(queue) # Pops head of the heapq
+        distance, coordinate = heappop(queue)  # Pops head of the heapq
         adjacency = adj(graph, coordinate)
-        for (coordinate2,distance) in adjacency:
-            alt=dist[coordinate] + distance
-            if (coordinate2 not in dist) or (alt < dist[coordinate2]):#other stuff :
-                dist[coordinate2]=alt
-                prev[coordinate2]=coordinate
-                heappush(queue, (alt,(coordinate2)))
+        for (coordinate2, distance) in adjacency:
+            alt = dist[coordinate] + distance
+            # other stuff :
+            if (coordinate2 not in dist) or (alt < dist[coordinate2]):
+                dist[coordinate2] = alt
+                prev[coordinate2] = coordinate
+                heappush(queue, (alt, (coordinate2)))
                 # *** need to finish ***
                 if coordinate2 == graph['waypoints'][destination]:
                     print("found")
@@ -63,18 +66,21 @@ def dijkstras_shortest_path_to_all(initial_position, graph, adj):
     prev = {}
     queue = []
     print(initial_position)
-    heappush(queue, (0,(graph['waypoints'][initial_position])))# distance
-    dist[graph['waypoints'][initial_position]] = 0 # Initialize summed distance from source waypoint
-    prev[graph['waypoints'][initial_position]] = None #Initializing Previous Node
+    heappush(queue, (0, (graph['waypoints'][initial_position])))  # distance
+    # Initialize summed distance from source waypoint
+    dist[graph['waypoints'][initial_position]] = 0
+    # Initializing Previous Node
+    prev[graph['waypoints'][initial_position]] = None
     while queue:
-        distance, coordinate= heappop(queue) # Pops head of the heapq
+        distance, coordinate = heappop(queue)  # Pops head of the heapq
         adjacency = adj(graph, coordinate)
-        for (coordinate2,distance) in adjacency:
-            alt=dist[coordinate] + distance
-            if (coordinate2 not in dist) or (alt < dist[coordinate2]):#other stuff :
-                dist[coordinate2]=alt
-                prev[coordinate2]=coordinate
-                heappush(queue, (alt,(coordinate2)))
+        for (coordinate2, distance) in adjacency:
+            alt = dist[coordinate] + distance
+            # other stuff :
+            if (coordinate2 not in dist) or (alt < dist[coordinate2]):
+                dist[coordinate2] = alt
+                prev[coordinate2] = coordinate
+                heappush(queue, (alt, (coordinate2)))
                 # *** need to finish ***
 
     return(dist)
@@ -102,16 +108,19 @@ def navigation_edges(level, cell):
     x, y = cell
 
     for dx in [-1, 0, 1]:
-        for dy in [-1,0,1]:
-            if ( (x+dx, y+dy) in level['spaces']) and (dx!=0 or dy!=0): # Makes sure to check if the adjacent squares
+        for dy in [-1, 0, 1]:
+            # Makes sure to check if the adjacent squares
+            if ((x + dx, y + dy) in level['spaces']) and (dx != 0 or dy != 0):
                 x2 = x + dx
                 y2 = y + dy
                 #print(x + dx, y + dy)
-                if dx==0 or dy==0:
-                    new_dist=(0.5*(level['spaces'][(x2, y2)] + level['spaces'][(x, y)]))
+                if dx == 0 or dy == 0:
+                    new_dist = (
+                        0.5 * (level['spaces'][(x2, y2)] + level['spaces'][(x, y)]))
                 else:
-                    new_dist = sqrt(2)*0.5*(level['spaces'][(x2, y2)] + level['spaces'][(x, y)])
-                adjacencies.append(((x2, y2),new_dist))
+                    new_dist = sqrt(
+                        2) * 0.5 * (level['spaces'][(x2, y2)] + level['spaces'][(x, y)])
+                adjacencies.append(((x2, y2), new_dist))
 
     return adjacencies
     pass
@@ -136,7 +145,9 @@ def test_route(filename, src_waypoint, dst_waypoint):
     #dst = level['waypoints'][dst_waypoint]
 
     # Search for and display the path from src to dst.
-    path = dijkstras_shortest_path(src_waypoint, dst_waypoint, level, navigation_edges)
+    path = dijkstras_shortest_path(
+        src_waypoint, dst_waypoint, level, navigation_edges)
+
     print(path)
     if path:
         show_level(level, path)
@@ -154,30 +165,33 @@ def cost_to_all_cells(filename, src_waypoint, output_filename):
         output_filename: The filename for the output csv file.
 
     """
-    
+
     # Load and display the level.
     level = load_level(filename)
     show_level(level)
 
     # Retrieve the source coordinates from the level.
     #src = level['waypoints'][src_waypoint]
-    
-    # Calculate the cost to all reachable cells from src and save to a csv file.
-    costs_to_all_cells = dijkstras_shortest_path_to_all(src_waypoint, level, navigation_edges)
+
+    # Calculate the cost to all reachable cells from src and save to a csv
+    # file.
+    costs_to_all_cells = dijkstras_shortest_path_to_all(
+        src_waypoint, level, navigation_edges)
     save_level_costs(level, costs_to_all_cells, output_filename)
 
 
 if __name__ == '__main__':
-    filename, src_waypoint, dst_waypoint = 'example.txt', 'a','e'
+    filename, src_waypoint, dst_waypoint = 'my_maze.txt', 'a', 'd'
 
     #level = load_level(filename)
 
     #dijkstras_shortest_path(src_waypoint,dst_waypoint, level, navigation_edges)
-    #show_level(level)
+    # show_level(level)
 
-    #navigation_edges(level,(1,1))
+    # navigation_edges(level,(1,1))
     # Use this function call to find the route between two waypoints.
     test_route(filename, src_waypoint, dst_waypoint)
 
-    # Use this function to calculate the cost to all reachable cells from an origin point.
-    cost_to_all_cells(filename, 'e', 'my_costs.csv')
+    # Use this function to calculate the cost to all reachable cells from an
+    # origin point.
+    cost_to_all_cells(filename, 'e', 'my_maze_costs.csv')
