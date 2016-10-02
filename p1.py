@@ -25,18 +25,17 @@ def dijkstras_shortest_path(initial_position, destination, graph, adj):
     """
     # Return prev as a list
     Q = []  # Create a vertex set Q, (list)
-    heappush(Q, (starting_position, 0)
-    dist={}  # Distance
-    prev={}  # "Back Pointer"
+    adjacencies = adj()
+    heappush(Q, (starting_position, 0))
+    dist = {}  # Distance
+    prev = {}  # "Back Pointer"
     while Q:
-        u=min(Q, key=Q.get)  # Remove & return best vertex
-        u=Q.nsmallest(1, Q
-        for v in Q:  # Everything else besides best vertex
-            if not best_vertex:
-                alt=dist[u]  # + dist(u, v)
-            if alt < dist[v]:
-                dist[v]=alt
-                prev[v]=u
+        u = nsmallest(1, Q)  # Remove & return best vertex
+        for v in adjacencies:  # Everything else besides best vertex
+            alt = dist[u] + length(u, v)
+            if v not in dist or alt < dist[v]:
+                dist[v] = alt
+                prev[v] = u
                 Q.decrease_priority(v, alt)
     """
     Because dist will not be defined for unvisited states,
@@ -90,17 +89,17 @@ def navigation_edges(level, cell):
              ((1,1), 1.4142135623730951),
              ... ]
     """
-    adjacencies=[]
-    x, y=cell
+    adjacencies = []
+    x, y = cell
     for dx in [-1, 0, 1]:
         for dy in [-1, 0, 1]:
             # Makes sure to check if the adjacent squres
             if dx != 0 or dy != 0 and (x + dx, y + dy) in level['spaces']:
                 if dx == 0 or dy == 0:
-                    new_dist=(
+                    new_dist = (
                         0.5 * level['spaces'][x][y] + 0.5 * level['spaces'][x + dx][y + dy])
                 else:
-                    new_dist=(
+                    new_dist = (
                         sqrt(2) * (level['spaces'][x][y] + level['spaces'][x + dx][y + dy]))
                 adjacencies.append(((x + dx, y + dy), new_dist))
 
@@ -119,15 +118,15 @@ def test_route(filename, src_waypoint, dst_waypoint):
     """
 
     # Load and display the level.
-    level=load_level(filename)
+    level = load_level(filename)
     show_level(level)
 
     # Retrieve the source and destination coordinates from the level.
-    src=level['waypoints'][src_waypoint]
-    dst=level['waypoints'][dst_waypoint]
+    src = level['waypoints'][src_waypoint]
+    dst = level['waypoints'][dst_waypoint]
 
     # Search for and display the path from src to dst.
-    path=dijkstras_shortest_path(src, dst, level, navigation_edges)
+    path = dijkstras_shortest_path(src, dst, level, navigation_edges)
     if path:
         show_level(level, path)
     else:
@@ -146,21 +145,21 @@ def cost_to_all_cells(filename, src_waypoint, output_filename):
     """
 
     # Load and display the level.
-    level=load_level(filename)
+    level = load_level(filename)
     show_level(level)
 
     # Retrieve the source coordinates from the level.
-    src=level['waypoints'][src_waypoint]
+    src = level['waypoints'][src_waypoint]
 
     # Calculate the cost to all reachable cells from src and save to a csv
     # file.
-    costs_to_all_cells=dijkstras_shortest_path_to_all(
+    costs_to_all_cells = dijkstras_shortest_path_to_all(
         src, level, navigation_edges)
     save_level_costs(level, costs_to_all_cells, output_filename)
 
 
 if __name__ == '__main__':
-    filename, src_waypoint, dst_waypoint='example.txt', 'a', 'e'
+    filename, src_waypoint, dst_waypoint = 'example.txt', 'a', 'e'
 
     # Use this function call to find the route between two waypoints.
     test_route(filename, src_waypoint, dst_waypoint)
