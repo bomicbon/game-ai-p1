@@ -148,7 +148,11 @@ def test_route(filename, src_waypoint, dst_waypoint):
     path = dijkstras_shortest_path(
         src_waypoint, dst_waypoint, level, navigation_edges)
 
-    print(path)
+    # print(path)
+    # Commented out for the deliverables below
+    target = open("test_maze_path.txt", 'w')
+    target.writelines(str(path))
+
     if path:
         show_level(level, path)
     else:
@@ -181,7 +185,7 @@ def cost_to_all_cells(filename, src_waypoint, output_filename):
 
 
 if __name__ == '__main__':
-    filename, src_waypoint, dst_waypoint = 'my_maze.txt', 'a', 'd'
+    filename, src_waypoint, dst_waypoint = 'test_maze.txt', 'a', 'd'
 
     #level = load_level(filename)
 
@@ -194,4 +198,5 @@ if __name__ == '__main__':
 
     # Use this function to calculate the cost to all reachable cells from an
     # origin point.
-    cost_to_all_cells(filename, 'e', 'my_maze_costs.csv')
+    # Commented out for test_maze_path.txt
+    # cost_to_all_cells(filename, 'e', 'my_maze_costs.csv')
